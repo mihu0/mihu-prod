@@ -70,7 +70,7 @@ function UserProfile() {
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row md:h-[45vh] bg-teal-700 py-10 md:py-0">
         <div className="flex-[0.30] flex justify-center items-center">
-          <div className="bg-white rounded-full w-56 h-56 border">
+          <div className="bg-white rounded-full w-40 h-40 md:w-56 md:h-56 border">
             <UserIcon className="p-10"/>
           </div>
         </div>

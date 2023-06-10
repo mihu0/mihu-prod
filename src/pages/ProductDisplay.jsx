@@ -16,9 +16,13 @@ function ProductDisplay() {
 
   const dispatch = useDispatch();
   const [isAdded,setIsAdded] = useState(false);
+  const [selectedImage,setSelectedImage] = useState(0);
+  const [itemCount,setItemCount] = useState(1)
+
     const handleAddToCart =()=>{
         if (!isAdded) {
-            dispatch(addToCart({item:{...product,count:1}}))
+            dispatch(addToCart({item:{...product,count:itemCount}}))
+            setItemCount(1)
             setIsAdded(true);
             setTimeout(()=>{
                 setIsAdded(false);
@@ -116,38 +120,38 @@ function ProductDisplay() {
   }
 
   return (
-    <div id='product' className="py-5 px-12">
-      <div id='upper' className="flex gap-12">
-        <div id='imgDisplay' className="flex-[1] flex gap-5">
-          <div id='imagesAll' className="flex-[0.8] rounded-md">
+    <div id='product' className="py-5 px-6 md:px-12">
+      <div id='upper' className="flex flex-col md:flex-row gap-6 md:gap-12">
+        <div id='imgDisplay' className="flex-[1] flex flex-col-reverse md:flex-row  gap-5 md:max-h-[600px]">
+          {product.imageLinks.length>1 && <div id='imagesAll' className="flex-[0.8] rounded-md flex md:block gap-2 md:flex-col md:max-h-[550px] scrollbar overflow-auto">
             {/* <img src={images[1]} alt="chair" className="w-full h-36 object-cover cursor-pointer mb-2" />
             <img src={images[2]} alt="chair" className="w-full h-36 object-cover cursor-pointer mb-2" /> */}
             {product.imageLinks.map((image,i)=>{
-              if (i!==0) {
-                return <img src={image} alt="chair" className="w-full h-36 object-cover cursor-pointer mb-2" />
+              if (i!==selectedImage) {
+                return <motion.img key={`${i}-${image}`} whileHover={{scale:1.1}} whileTap={{scale:0.9}} src={image} alt="chair" className="w-full h-16 md:h-36 object-cover md:mb-4 cursor-pointer" onClick={()=>setSelectedImage(i)} />
                 
               }
               return <></>
             })}
 
-          </div>
+          </div>}
           <div id='imageMain' className="flex-[3]">
-            <img src={product.imageLinks[0]} alt="chair" className="w-full max-h-[600px] object-cover" />
+            <img src={product.imageLinks[selectedImage]} alt="chair" className="w-full max-h-[600px] object-cover" />
           </div>
 
         </div>
 
 
         <div id='details' className="flex-[1] flex flex-col gap-7">
-          <h1 className="text-3xl font-bold w-[80%]">{product.name}</h1>
+          <h1 className="text-3xl font-bold w-full md:w-[80%]">{product.name}</h1>
           <span className="text-2xl text-teal-700 font-medium">RS. {product.price}</span>
-          <p className="text-base font-light text-justify">{product.desc}</p>
+          <p className="text-base font-light text-justify line-clamp-[10]">{product.desc}</p>
           <div className="flex items-center gap-2 font-bold">
-            <button className="bg-green-400 flex justify-center items-center py-1 px-2 text-white">+</button>
-            1
-            <button className="bg-red-400 flex justify-center items-center py-1 px-2 text-white">-</button>
+            <motion.button  whileTap={{scale:0.9}} onClick={()=>setItemCount(itemCount+1)} className="bg-green-400 flex justify-center items-center py-1 px-2 text-white">+</motion.button>
+            {itemCount}
+            <motion.button whileTap={{scale:0.9}} onClick={()=>setItemCount(itemCount!==1?itemCount-1:itemCount)} className="bg-red-400 flex justify-center items-center py-1 px-2 text-white">-</motion.button>
           </div>
-          <button onClick={handleAddToCart} className="bg-teal-500 flex p-3 px-6 text-white font-semibold gap-2 rounded w-44">{isAdded?<CheckCircleIcon className='h-5 w-5'/>:<ShoppingCartIcon className='h-5 w-5' />}{isAdded?"Product Added":" Add to Cart"}</button>
+          <motion.button whileHover={{scale:1.1}} whileTap={{scale:0.9}} onClick={handleAddToCart} className="bg-teal-500 flex p-3 px-6 text-white font-semibold gap-2 rounded w-44 hover:bg-teal-400">{isAdded?<CheckCircleIcon className='h-5 w-5'/>:<ShoppingCartIcon className='h-5 w-5' />}{isAdded?"Product Added":" Add to Cart"}</motion.button>
           <div className="flex gap-6">
             <motion.button onClick={handleFavorite} whileHover={{scale:1.1}} whileInView={{scale:0.9}} className="text-red-500 font-semibold flex items-center gap-2 tracking-wide hover:bg-slate-200 p-2 rounded-lg">
               <HeartIcon className={`h-7 w-7` } fill= {`${isFavorite?"red":"white"}`}/>

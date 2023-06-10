@@ -13,6 +13,8 @@ import ProductDisplay from "./pages/ProductDisplay";
 import ProductsListPage from "./pages/ProductsListPage";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import SuccessPage from "./pages/SuccessPage";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
@@ -31,6 +33,9 @@ function App() {
           <Route path="brands/:brand" element={<ProductsListPage/>}/>
 
           <Route path="search/:searchQuery" element={<ProductsListPage/>}/>
+          <Route path="checkout/success" element={<SuccessPage/>}/>
+          <Route path="checkout/error" element={<ErrorPage/>}/>
+
 
         </Route>
 
