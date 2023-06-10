@@ -15,6 +15,7 @@ function Search({onPressCLose}) {
         }
         else{
             navigate(`/search/${search}`)
+            onPressCLose()
         }
     }
   return (
