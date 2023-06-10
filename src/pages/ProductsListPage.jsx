@@ -66,17 +66,17 @@ function ProductsListPage() {
     </div>
   }
   return (
-    <div className="py-6">
-      <div className="flex w-full gap-5">
+    <div className="py-6 px-3 md:px-0">
+      <div className="flex w-full gap-5 flex-col md:flex-row">
         <div className="flex-[0.15] flex flex-col items-center">
           <button className="bg-black/70 text-white p-2 rounded-lg w-[80%] hover:bg-black ">Apply Filters {">"}</button>
         </div>
-        <div className="flex-[0.8] flex flex-col gap-5">
-          <div className="w-full h-56 relative">
+        <div className="flex-[0.8] flex flex-col gap-5 items-center md:items-start">
+          <div className="w-[95%] md:w-full h-48 md:h-56 relative">
             <img src="https://images.unsplash.com/photo-1438012940875-4bf705025a8a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="chairs" className="w-full h-full object-cover rounded-md" />
-            <p className="text-5xl bg-black/30 rounded p-2 text-white font-semibold absolute top-5 left-5">{category?category:searchQuery?searchQuery:brand}</p>
+            <p className="text-3xl md:text-5xl bg-black/30 rounded p-2 text-white font-semibold absolute top-5 left-5">{category?category:searchQuery?searchQuery:brand}</p>
           </div>
-          <div className="grid grid-cols-5 gap-8">
+          <div className="grid md:grid-rows-1 grid-rows-3 grid-cols-2 md:grid-cols-5 gap-4 md:gap-3 w-full items-center justify-center px-3 md:px-0">
             {products.map((prod) => (
               <ProductCard key={prod.name} product={prod} />
             ))}

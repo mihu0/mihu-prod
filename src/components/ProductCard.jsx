@@ -1,16 +1,29 @@
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stars from './Stars';
 import { HeartIcon,ShoppingCartIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../features/Cart';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { manageFavorite } from '../features/User';
+import axios from 'axios';
 
 
 function ProductCard({product}) {
     const dispatch =  useDispatch();
+    const {isUserLoggedIn,favorites,user} = useSelector(state=>state.user)
     const [isFavorite,setIsfavorite] = useState(false);
     const [isAdded,setIsAdded] = useState(false);
+
+
+    useEffect(()=>{
+        if (favorites.length!==0) {
+            if (favorites.indexOf(product._id)!==-1) {
+                setIsfavorite(true)
+            }
+        }
+    },[])
     const handleAddToCart =()=>{
         if (!isAdded) {
             dispatch(addToCart({item:{...product,count:1}}))
@@ -20,6 +33,47 @@ function ProductCard({product}) {
             },2500);
         }
 
+    }
+
+    const handleFavorite = async ()=>{
+        if(!isUserLoggedIn){
+            toast("Please Login First!!")
+        }
+        else{
+            let newFavs = []
+            if (isFavorite) {
+                newFavs = favorites.filter(fav=>{
+                    return fav!==product._id;
+                    
+                })
+            }
+            else{
+                newFavs = [...favorites]
+                newFavs.push(product._id)
+            }
+            const config = {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization:`Bearer ${user}`
+                }
+              }
+
+            axios.post(`${process.env.REACT_APP_API_URL}manageFavorite`,{favorites:newFavs},config).then(val=>{
+                console.log("VAL  ",val)
+                if (val.data.success) {
+                    setIsfavorite(!isFavorite)
+
+                    localStorage.setItem("favorites",JSON.stringify(newFavs))
+                    dispatch(manageFavorite(newFavs))
+                }
+                else{
+                  toast("Favorite not Added");
+                }
+              }).catch((error=>{
+                console.log(error)
+                  toast("Favorite not Added");
+              }))
+        }
     }
 
     return (
@@ -39,7 +93,7 @@ function ProductCard({product}) {
                 <div className="flex flex-col md:flex-row md:items-center justify-between">
                     <span className="text-lg md:text-lg font-bold text-gray-900">Rs.{product.price}</span>
                     <div className="flex gap-3 self-end md:self-auto">
-                        <motion.div whileTap={{scale:0.8}} whileHover={{scale:1.1}} onClick={()=>setIsfavorite(!isFavorite)}>
+                        <motion.div whileTap={{scale:0.8}} whileHover={{scale:1.1}} onClick={handleFavorite}>
                             <HeartIcon className={`h-7 w-7 text-red-500 hover:text-red-700 ${isFavorite?"fill-red-500":""}`}/>
                         </motion.div>
                         <motion.div whileTap={{scale:0.8}} whileHover={{scale:1.1}} onClick={handleAddToCart}>

@@ -3,7 +3,7 @@ import { MagnifyingGlassIcon, ShoppingCartIcon, UserIcon, Bars3Icon } from '@her
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../features/User';
+import { login, manageFavorite } from '../features/User';
 import { setIsCartOpen } from '../features/Cart';
 import Search from './Search';
 import axios from 'axios';
@@ -138,8 +138,13 @@ function Navbar() {
     useEffect(() => {
         if (!isUserLoggedIn) {
             const token = localStorage.getItem('auth-token');
+            const favs = JSON.parse(localStorage.getItem('favorites'));
+
             if (token !== null && token !== undefined) {
                 dispatch(login(token))
+            }
+            if (favs !== null && favs !== undefined) {
+                dispatch(manageFavorite(favs))
             }
         }
     }, [isUserLoggedIn, dispatch])
@@ -154,7 +159,7 @@ function Navbar() {
                 <motion.div className={`pt-7 md:pt-0 pb-7 absolute z-50 bg-white shadow ${(menuState && !isCartOpen) ? "" : "translate-y-[-200%]"} min-h-[40%] right-0 top-20 w-full md:translate-y-0 md:shadow-none md:z-0 md:flex md:bg-transparent md:pb-0 md:static md:min-h-fit md:w-auto transition-all duration-300 ease-in`}>
                     <ul className="flex flex-col gap-12 md:flex-row items-center md:flex md:gap-6 text-lg font-medium">
                         <motion.li whileHover={{ scale: 1.1 }} className="hover:text-sky-600"><a href="/#">About Us</a></motion.li>
-                        <motion.li ref={brandRef} id="brands" onHoverStart={() => { setBrandsModal(true); setCategotyModal(false) }} onTap={() => { setBrandsModal(!brandModal); setCategotyModal(false)}} whileHover={{ scale: 1.1 }} className="hover:text-sky-600 cursor-pointer">
+                        <motion.li ref={brandRef} id="brands"    onClick={() => { setBrandsModal(!brandModal); setCategotyModal(false)}} whileHover={{ scale: 1.1 }} className="hover:text-sky-600 cursor-pointer">
                             Brands
                             {isMobile && brandModal && <motion.div initial={{ y: -20, scaleX: 0.4, opacity: 0.7 }} animate={{ scaleX: 1, y: 0, opacity: 1 }} transition={{ type: "spring" }} id="brandsHover" style={{ left: brandsPostion }} className={`z-[9999] absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 w-min-44`}>
                                 <ul className="py-2 text-sm text-gray-700 grid-rows-5 grid-flow-col" aria-labelledby="dropdownHoverButton">
@@ -168,10 +173,10 @@ function Navbar() {
                                 </ul>
                             </motion.div>}
                         </motion.li>
-                        <motion.li ref={categoryRef} id="category" onHoverStart={() => { setCategotyModal(true); setBrandsModal(false) }} onTap={() => { setCategotyModal(!categoryModal); setBrandsModal(false) }} whileHover={{ scale: 1.1 }} className="hover:text-sky-600 cursor-pointer">
+                        <motion.li ref={categoryRef} id="category" onClick={() => { setCategotyModal(!categoryModal); setBrandsModal(false) }} whileHover={{ scale: 1.1 }} className="hover:text-sky-600 cursor-pointer">
                             Category
                             {categoryModal && isMobile && <motion.div initial={{ y: -20, scaleX: 0.4, opacity: 0.7 }} animate={{ scaleX: 1, y: 0, opacity: 1 }} transition={{ type: "spring" }} id="categoryHover" style={{ left: categoryPostion }} className={`z-[9999] absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-min-44`}>
-                                <ul className="py-2 text-sm text-gray-700 grid grid-rows-5 grid-flow-col" aria-labelledby="dropdownHoverButton">
+                                <ul className="py-2 text-sm text-gray-700 grid grid-rows-5 grid-cols-4" aria-labelledby="dropdownHoverButton">
                                     {categories.map((cat, i) => (
                                         <li key={i}>
                                             <Link to={`category/${cat}`} className="block px-4 py-2 hover:bg-gray-100 hover:text-sky-600">{cat}</Link>
@@ -228,7 +233,7 @@ function Navbar() {
                 </ul>
             </motion.div>}
             {categoryModal && !isMobile && <motion.div initial={{ y: -20, scaleX: 0.4, opacity: 0.7 }} animate={{ scaleX: 1, y: 0, opacity: 1 }} transition={{ type: "spring" }} id="categoryHover" style={{ left: categoryPostion }} className={`z-[9999] absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-min-44`}>
-                <ul className="py-2 text-sm text-gray-700 grid grid-rows-5 grid-flow-col" aria-labelledby="dropdownHoverButton">
+                <ul className="py-2 text-sm text-gray-700 grid grid-rows-5 grid-cols-4 " aria-labelledby="dropdownHoverButton">
                     {categories.map((cat, i) => (
                         <li key={i}>
                             <Link to={`category/${cat}`} className="block px-4 py-2 hover:bg-gray-100 hover:text-sky-600">{cat}</Link>

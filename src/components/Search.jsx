@@ -19,7 +19,7 @@ function Search({onPressCLose}) {
     }
   return (
     <div className="bg-black/40 z-[100] flex justify-center fixed top-0 left-0 right-0 bottom-0">
-        <div className="py-5 w-[50%] h-[40%] bg-white rounded-lg mt-32 flex flex-col justify-around items-center relative">
+        <div className="py-5 w-[90%] h-[30%] px-3 md:px-0 md:w-[50%] md:h-[40%] bg-white rounded-lg mt-32 flex flex-col justify-around items-center relative">
             <div className="absolute rounded-full bg-red-500 py-2 px-4 text-white font-bold -top-4 -right-5 select-none cursor-pointer" onClick={onPressCLose}>
                 X
             </div>

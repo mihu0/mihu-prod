@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     isUserLoggedIn: false,
-    user:{}
+    user:{},
+    favorites:[]
 }
 const userSlice = createSlice({
     name:"user",
@@ -16,9 +17,13 @@ const userSlice = createSlice({
         logout:(state)=>{
             state.isUserLoggedIn = false
             state.user = {}
+        },
+        manageFavorite:(state,action)=>{
+            console.log(action.payload,"FAVS PAY")
+            state.favorites = action.payload
         }
     }
 });
 
 export default userSlice.reducer
-export const {login,logout}  = userSlice.actions
+export const {login,logout,manageFavorite}  = userSlice.actions

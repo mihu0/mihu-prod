@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { login } from '../features/User';
+import { login, manageFavorite } from '../features/User';
 
 
 
@@ -79,10 +79,12 @@ function Login() {
             
             const {data} = await axios.post(`${process.env.REACT_APP_API_URL}auth/login`,user,config);
             localStorage.setItem("auth-token",data.token);
+            localStorage.setItem("favorites",JSON.stringify(data.favorites))
             setSpan("Successfully Logged Up!!");
             setTimeout(()=>{
                 setSpan("");
                 dispatch(login(data.token))
+                dispatch(manageFavorite(data.favorites))
             },2000)
             
         } catch (error) {

@@ -1,14 +1,19 @@
 import { CheckCircleIcon, CubeIcon, HeartIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addToCart } from '../features/Cart'
+import { manageFavorite } from '../features/User'
+import { motion } from 'framer-motion'
 
 function ProductDisplay() {
   const [product, setProduct] = useState(null)
   const { id } = useParams()
+  const {isUserLoggedIn,favorites,user} = useSelector(state=>state.user)
+  const [isFavorite,setIsfavorite] = useState(false);
+
   const dispatch = useDispatch();
   const [isAdded,setIsAdded] = useState(false);
     const handleAddToCart =()=>{
@@ -21,6 +26,57 @@ function ProductDisplay() {
         }
 
     }
+    useEffect(()=>{
+      if (product) {
+        
+        if (favorites.length!==0) {
+            if (favorites.indexOf(product._id)!==-1) {
+                setIsfavorite(true)
+            }
+        }
+      }
+  },[product])
+    
+    const handleFavorite = async ()=>{
+      if(!isUserLoggedIn){
+          toast("Please Login First!!")
+      }
+      else{
+          let newFavs = []
+          if (isFavorite) {
+            newFavs = favorites.filter(fav=>{
+              return fav!==product._id;
+              
+          })
+          }
+          else{
+              newFavs = [...favorites]
+              newFavs.push(product._id)
+          }
+          const config = {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization:`Bearer ${user}`
+              }
+            }
+
+          axios.post(`${process.env.REACT_APP_API_URL}manageFavorite`,{favorites:newFavs},config).then(val=>{
+              console.log("VAL  ",val)
+              if (val.data.success) {
+                  setIsfavorite(!isFavorite)
+
+                  localStorage.setItem("favorites",JSON.stringify(newFavs))
+                  dispatch(manageFavorite(newFavs))
+              }
+              else{
+                toast("Favorite not Added");
+              }
+            }).catch((error=>{
+              console.log(error)
+                toast("Favorite not Added");
+            }))
+      }
+  }
 
   useEffect(() => {
     const config = {
@@ -93,10 +149,10 @@ function ProductDisplay() {
           </div>
           <button onClick={handleAddToCart} className="bg-teal-500 flex p-3 px-6 text-white font-semibold gap-2 rounded w-44">{isAdded?<CheckCircleIcon className='h-5 w-5'/>:<ShoppingCartIcon className='h-5 w-5' />}{isAdded?"Product Added":" Add to Cart"}</button>
           <div className="flex gap-6">
-            <div className="text-red-500 font-semibold flex items-center gap-2 tracking-wide ">
-              <HeartIcon className='h-7 w-7' />
-              Add to favorites
-            </div>
+            <motion.button onClick={handleFavorite} whileHover={{scale:1.1}} whileInView={{scale:0.9}} className="text-red-500 font-semibold flex items-center gap-2 tracking-wide hover:bg-slate-200 p-2 rounded-lg">
+              <HeartIcon className={`h-7 w-7` } fill= {`${isFavorite?"red":"white"}`}/>
+              {isFavorite?"In Favorites":"Add to favorites"}
+            </motion.button>
             <div className="text-blue-500 font-semibold flex gap-2 tracking-wide items-center">
               <CubeIcon className='h-7 w-7' />
               View In 3D
