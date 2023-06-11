@@ -15,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import SuccessPage from "./pages/SuccessPage";
 import ErrorPage from "./pages/ErrorPage";
+import ImageSearch from "./components/ImageSearch";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
 
       </Routes>
       <CartMenu/>
+      <ImageSearch/>
       <ToastContainer/>
     </>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { MagnifyingGlassIcon, ShoppingCartIcon, UserIcon, Bars3Icon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon, ShoppingCartIcon, UserIcon, Bars3Icon, CameraIcon } from '@heroicons/react/24/outline'
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,7 +8,7 @@ import { setIsCartOpen } from '../features/Cart';
 import Search from './Search';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { closeAll, setBrandsModal, setCategoriesModal, setMenuBar, setSearchModal } from '../features/Modals';
+import { closeAll, setBrandsModal, setCategoriesModal, setImageSearch, setMenuBar, setSearchModal } from '../features/Modals';
 
 
 function Navbar() {
@@ -196,6 +196,9 @@ function Navbar() {
                 <div className="flex gap-4">
                     <motion.div whileTap={{ scale: 0.8 }} onClick={() => { menu && dispatch(setMenuBar(false)); dispatch(setSearchModal(!search)); }}>
                         <MagnifyingGlassIcon className="h-6 w-6 hover:text-sky-600 duration-200" />
+                    </motion.div>
+                    <motion.div whileTap={{ scale: 0.8 }} onClick={() => {  dispatch(setImageSearch(true)); }}>
+                        <CameraIcon className="h-6 w-6 hover:text-sky-600 duration-200" />
                     </motion.div>
                     <motion.div whileTap={{ scale: 0.8 }} onClick={() => {dispatch(setIsCartOpen({}));dispatch(closeAll())}}>
                         <div className="relative">

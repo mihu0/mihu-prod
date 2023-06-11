@@ -33,7 +33,7 @@ const modalsSlice = createSlice({
         setCategoriesModal:(state,action)=>{
             if (action.payload) {
                 state.brandsModal=false
-                state.menu=false
+                // state.menu=false
                 state.search=false
                 state.imageSearch=false
             }
@@ -42,7 +42,7 @@ const modalsSlice = createSlice({
         setBrandsModal:(state,action)=>{
             if (action.payload) {
                 state.categoriesModal=false
-                state.menu=false
+                // state.menu=false
                 state.search=false
                 state.imageSearch=false
             }

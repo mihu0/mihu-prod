@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { closeAll } from '../features/Modals';
+import { CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 
 
@@ -15,18 +16,18 @@ function Registeration() {
     const [values, setValues] = useState({
         fullname: "",
         email: "",
-        phonenumber:"",
+        phonenumber: "",
         address: "",
         password: "",
         confirmPassword: "",
     });
-    const [span,setSpan] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const [signUp, setSignUp] = useState(null)
 
-  useEffect(()=>{
-    dispatch(closeAll())
-  },[])
+    useEffect(() => {
+        dispatch(closeAll())
+    }, [])
 
     const inputs = [
         {
@@ -68,7 +69,7 @@ function Registeration() {
             placeholder: "Address",
             label: "Address",
             required: true,
-            errorMessage:"There should be an address",
+            errorMessage: "There should be an address",
 
         },
         {
@@ -76,11 +77,11 @@ function Registeration() {
             name: "password",
             type: "password",
             placeholder: "Password",
-            errorMessage:"Password should be 6-20 characters and must include a letter, number and a special character!",
+            errorMessage: "Password should be 6-20 characters and must include a letter, number and a special character!",
             label: "Password",
             pattern: `^(?=.*[0-9])(?=.*[.!@#$%^&*])[a-zA-Z0-9.!@#$%^&*]{6,20}$`,
             required: true,
-            autoComplete:"off",
+            autoComplete: "off",
         },
         {
             id: 6,
@@ -91,20 +92,20 @@ function Registeration() {
             label: "Confirm Password",
             pattern: values.password,
             required: true,
-            autoComplete:"off",
+            autoComplete: "off",
         },
     ];
 
     const variant = {
-        initial:{
-            scale:0.5,
-            opacity:0.3,
+        initial: {
+            scale: 0.5,
+            opacity: 0.3,
         },
-        animate:{
-            scale:1,
-            opacity:1,
-            transition:{
-                type:"spring",
+        animate: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+                type: "spring",
             }
         }
     }
@@ -112,41 +113,43 @@ function Registeration() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const user = {
-        name: values.fullname,
-        email: values.email,
-        password: values.password,
-        isAdmin: false,
-        isVendor: false,
-        isSeller: false,
-        address: values.address,
-        phone: values.phonenumber,
+            name: values.fullname,
+            email: values.email,
+            password: values.password,
+            isAdmin: false,
+            isVendor: false,
+            isSeller: false,
+            address: values.address,
+            phone: values.phonenumber,
         }
 
         const config = {
-            header:{
-                "Content-Type":"application/json",
+            header: {
+                "Content-Type": "application/json",
             }
         }
 
         try {
-            
-            await axios.post(`${process.env.REACT_APP_API_URL}auth/register`,user,config);
+
+            await axios.post(`${process.env.REACT_APP_API_URL}auth/register`, user, config);
             //localStorage.setItem("auth-token",data.token);
-            setSpan("Successfully Signed Up!!");
-            setTimeout(()=>{
-                setSpan("");
+            // setSpan("Successfully Signed Up!!");
+            setSignUp(true)
+            setTimeout(() => {
+                // setSpan("");
                 navigate("/login")
                 toast("Sign Up Successfull!")
-            },2000)
-            
+            }, 3000)
+
         } catch (error) {
-            
-            setSpan(error.response.data.error);
-            setTimeout(()=>{
-                setSpan("");
+            setSignUp(false)
+            // setSpan(error.response.data.error);
+            setTimeout(() => {
+                setSignUp(null)
+                // setSpan("");
                 toast("Sign Up Unsuccessfull!")
 
-            },5000)
+            }, 5000)
         }
     };
 
@@ -157,10 +160,10 @@ function Registeration() {
     return (
         <>
             <div className="flex items-center justify-center h-[92vh] md:h-[90vh] w-full bg-gradient-to-b from-teal-200 to-teal-700 relative overflow-hidden">
-                <motion.div variants={variant} initial="initial" animate="animate" className="px-4 py-8 w-[90%]  md:w-[35%] bg-slate-100 rounded-xl z-40 flex flex-col items-center">
+                {signUp === null ? (<motion.div variants={variant} initial="initial" animate="animate" className="px-4 py-8 w-[90%]  md:w-[35%] bg-slate-100 rounded-xl z-40 flex flex-col items-center">
                     <form onSubmit={handleSubmit} className="text-center px-3 md:px-10 h-full w-full overflow-hidden flex flex-col justify-center items-center">
                         <h1 className="text-xl md:text-2xl font-semibold mb-4">Sign Up</h1>
-                        {span && <span className={`mb-4 rounded-lg w-full text-white ${span==="Successfully Signed Up!!"?"bg-teal-600":"bg-red-600"}`}>{span}</span>}
+                        {/* {span && <span className={`mb-4 rounded-lg w-full text-white ${span==="Successfully Signed Up!!"?"bg-teal-600":"bg-red-600"}`}>{span}</span>} */}
                         {inputs.map((input) => (
                             <FormInput
                                 key={input.id}
@@ -169,11 +172,19 @@ function Registeration() {
                                 onChange={onChange}
                             />
                         ))}
-                        <motion.button whileTap={{ scale: 0.9}} className="mt-4 w-full h-11 p-2 border-none cursor-pointer bg-teal-500 text-white rounded font-bold text-lg hover:bg-teal-600">Submit</motion.button>
+                        <motion.button whileTap={{ scale: 0.9 }} className="mt-4 w-full h-11 p-2 border-none cursor-pointer bg-teal-500 text-white rounded font-bold text-lg hover:bg-teal-600">Submit</motion.button>
                     </form>
                     <p className="text-base  md:text-lg pr-3 relative">If you alredy have an account! <Link to="/login" className="underline hover:text-teal-700 ">Log In</Link></p>
 
-                </motion.div>
+                </motion.div>) : (
+                    <motion.div variants={variant} initial="initial" animate="animate" className="px-4 py-8 w-[90%]  md:w-[35%] bg-white rounded-xl z-40 flex flex-col items-center">
+
+                        <motion.div className={`${signUp ? "bg-teal-500" : "bg-red-500"} rounded-full`} initial={{ scale: 0.4, opacity: 0.6 }} animate={{ scale: 1, opacity: 1 }} transition={{ repeat: Infinity, duration: 1.5, type: 'spring' }}>
+                            {signUp ? <CheckCircleIcon className='h-44 w-44 text-white' /> : <XMarkIcon className='h-44 w-44 text-white' />}
+                        </motion.div>
+                        <h1 className='text-center mt-8 font-semibold text-2xl'>Sign Up {signUp ? "Successfull" : "Unsuccessfull! Try Again"}!!</h1>
+                    </motion.div>
+                )}
                 <WaveMotion />
             </div>
         </>
