@@ -8,6 +8,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import ProductCard from '../components/ProductCard';
 import { motion } from 'framer-motion';
+import { closeAll } from '../features/Modals';
 
 
 function UserProfile() {
@@ -17,6 +18,10 @@ function UserProfile() {
   const [currUser,setCurrUser] = useState(null)
   const [favorites,setFavorites] = useState([])
   
+
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
   useEffect(()=>{
     if (!isUserLoggedIn) {
       navigate("/")

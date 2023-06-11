@@ -7,6 +7,8 @@ import Services from '../components/Services';
 import Slider from "../components/Slider";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { closeAll } from '../features/Modals';
 
 
 
@@ -16,7 +18,10 @@ function Home() {
   const [products,setProducts] = useState(null);
   const [trending,setTrending] = useState(null);
   const [featured,setFeatured] = useState(null);
-
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
  
   useEffect(()=>{
     

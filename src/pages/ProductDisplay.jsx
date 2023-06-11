@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { addToCart } from '../features/Cart'
 import { manageFavorite } from '../features/User'
 import { motion } from 'framer-motion'
+import { closeAll } from '../features/Modals'
 
 function ProductDisplay() {
   const [product, setProduct] = useState(null)
@@ -18,7 +19,10 @@ function ProductDisplay() {
   const [isAdded,setIsAdded] = useState(false);
   const [selectedImage,setSelectedImage] = useState(0);
   const [itemCount,setItemCount] = useState(1)
-
+  
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
     const handleAddToCart =()=>{
         if (!isAdded) {
             dispatch(addToCart({item:{...product,count:itemCount}}))

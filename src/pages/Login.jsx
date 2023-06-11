@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { login, manageFavorite } from '../features/User';
 import { toast } from 'react-toastify';
+import { closeAll } from '../features/Modals';
 
 
 
@@ -25,6 +26,9 @@ function Login() {
             navigate("/")
         }
     });
+    useEffect(()=>{
+      dispatch(closeAll())
+    },[])
 
     const inputs = [
         

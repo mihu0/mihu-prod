@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CheckoutForm from '../components/CheckoutForm'
+import { closeAll } from '../features/Modals';
 
 const variants = {
   initial:{opacity:0,scaleY:0},
@@ -14,6 +15,10 @@ function Checkout() {
   const totalPrice = cart.reduce((total, item) => {
     return total + item.count * item.price;
   }, 0)
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
 
   return (
     <div className="md:h-[100vh]">

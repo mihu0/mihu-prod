@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../components/FormInput';
 import WaveMotion from '../components/WaveMotion'
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { closeAll } from '../features/Modals';
 
 
 
@@ -20,6 +22,11 @@ function Registeration() {
     });
     const [span,setSpan] = useState("");
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
 
     const inputs = [
         {

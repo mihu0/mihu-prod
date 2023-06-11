@@ -3,11 +3,17 @@ import ProductCard from '../components/ProductCard'
 import {  useParams } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { closeAll } from '../features/Modals'
 
 function ProductsListPage() {
   const { category, searchQuery,brand } = useParams()
   const [products, setProducts] = useState([])
+  const dispatch = useDispatch()
 
+  useEffect(()=>{
+    dispatch(closeAll())
+  },[])
   useEffect(() => {
     setProducts([])
     const config = {

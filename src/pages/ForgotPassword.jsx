@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from '../components/FormInput';
 import WaveMotion from '../components/WaveMotion'
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { closeAll } from '../features/Modals';
 //import { Link } from 'react-router-dom';
 
 
@@ -13,7 +15,10 @@ function ForgotPassword() {
         email: "",
     });
     const [span,setSpan] = useState("");
-
+    const dispatch = useDispatch()
+    useEffect(()=>{
+      dispatch(closeAll())
+    },[])
 
     const inputs = [
         
